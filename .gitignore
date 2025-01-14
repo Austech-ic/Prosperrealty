@@ -1,0 +1,8 @@
+**/__pycache__/
+# **/migrations/
+env/
+db.sqlite3
+.env
+.DS_Store
+membscribe-venv
+activate.bat
