@@ -10,23 +10,28 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+
 import os
 from pathlib import Path
 from datetime import timedelta
 from django.conf import settings
+from decouple import config
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-6x8qcnszkaz5s=qakrgacl^)j_gx^4ccjqn4a)-2!93#kn4624'
+
+SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True if config("DEBUG") == "True" else False
 
 ALLOWED_HOSTS = []
 
@@ -87,17 +92,25 @@ WSGI_APPLICATION = 'prospereality_api.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "Reality",
-        "USER": "postgres",
-        "PASSWORD": "test",
-        "HOST": "localhost",
-        "PORT": 5432,
+if config("IS_LIVE") and int(config("IS_LIVE")) == 1:
+    DATABASES = {
+        "default": dj_database_url.config(
+            default=config("DATABASE_URL"), conn_max_age=600
+        )
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": "Reality",
+            "USER": "postgres",
+            "PASSWORD": "test",
+            "HOST": "localhost",
+            "PORT": 5432,
+        }
+    }
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -142,6 +155,16 @@ MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "media")
 # URL used to access the media
 MEDIA_URL = "media/"
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+
+CLOUDINARY_STORAGE = {
+    "CLOUD_NAME": config("CLOUDINARY_CLOUD_NAME"),
+    "API_KEY": config("CLOUDINARY_API_KEY"),
+    "API_SECRET": config("CLOUDINARY_API_SECRET"),
+}
+
+# CLOUDINARY_UPLOAD_PRESENT=os.getenv("CLOUDINARY_UPLOAD_PRESENT")
+
+CLOUDINARY_BASE_URL = "https://res.cloudinary.com/{}/".format(config("CLOUDINARY_CLOUD_NAME"))
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
@@ -238,9 +261,5 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
 
-CLOUDINARY_STORAGE = {
-    "CLOUD_NAME": os.getenv("CLOUDINARY_CLOUD_NAME"),
-    "API_KEY": os.getenv("CLOUDINARY_API_KEY"),
-    "API_SECRET": os.getenv("CLOUDINARY_API_SECRET"),
-}
+
 

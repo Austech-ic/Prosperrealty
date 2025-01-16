@@ -104,6 +104,7 @@ class ProductReadSerializer(serializers.ModelSerializer):
 class ProductSingleReadSerializer(serializers.ModelSerializer):
     images=ImagesSerializer(many=True)
     tag=ProductTagSerializer(many=True)
+    created_by=UserSerializer()
     class Meta:
         model=Product
         fields="__all__"
