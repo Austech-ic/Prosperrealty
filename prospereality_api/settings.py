@@ -34,7 +34,8 @@ SECRET_KEY = config("SECRET_KEY")
 DEBUG = True if config("DEBUG") == "True" else False
 
 ALLOWED_HOSTS = [
-    "localhost"
+    "localhost",
+    "prosperrealty.onrender.com"
 ]
 
 
@@ -185,6 +186,7 @@ CORS_EXPOSE_HEADERS = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
+    "https://prosperrealty.onrender.com"
 ]
 CORS_ALLOW_ALL_ORIGINS=False
 

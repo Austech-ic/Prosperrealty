@@ -71,7 +71,7 @@ class User(AbstractUser):
     nationality=models.CharField(max_length=100,null=True)
     address=models.CharField(max_length=500,null=True)
     confirm_password = models.CharField(_('password'), max_length=128)
-    role=models.ManyToManyField(Role,null=True)
+    role=models.ManyToManyField(Role)
     image=models.ImageField(upload_to=upload_to,null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
