@@ -209,10 +209,6 @@ class SingleProductApiView(APIView):
             ) 
         
 class ProductBookingApiView(APIView):
-    permission_classes=[
-
-    ]
-
     @swagger_auto_schema(
             request_body=BookingWriteSerializer
     )
@@ -220,7 +216,7 @@ class ProductBookingApiView(APIView):
         try:
             serializer=BookingWriteSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
-            serializer.save()
+            serializer.save(initiated_by=request.user)
             return app_response(
                 success=True,
                 data=serializer.data,
@@ -425,6 +421,34 @@ class ProductStatusApiView(APIView):
                 data=ProductStatusSerializer(queryset,many=True).data,
                 message="STATE FETCHED SUCCESSFULLY",
                 # meta_data=meta_data,
+                http_status=status.HTTP_200_OK
+            ) 
+        except Exception as e:
+            return app_response(
+                success=False,
+                data=None,
+                message=error_handler(e),
+                http_status=status.HTTP_400_BAD_REQUEST
+            )  
+
+class AppointmentApiView(APIView):
+    @swagger_auto_schema(
+        request_body=AppointmentWriteSerializer
+    )
+    def post(self,request):
+        try:
+            serializer=AppointmentWriteSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            property=serializer.validated_data["property"]
+            agent_details=property.created_by
+            serializer.save(
+                userDetail=request.user,
+                agentDetail=agent_details
+            )
+            return app_response(
+                success=True,
+                data=None,
+                message="APPOINTMENT SUCCESSFUL",
                 http_status=status.HTTP_200_OK
             ) 
         except Exception as e:
