@@ -8,4 +8,4 @@ class AccountConfig(AppConfig):
     def ready(self):
         from .helpers import load_role
 
-        load_role()
+        # load_role()

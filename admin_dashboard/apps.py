@@ -11,7 +11,7 @@ class AdminDashboardConfig(AppConfig):
     def ready(self):
         from .helpers import createCountry,loadProductTag,loadProductStatus,loadProductType
 
-        loadProductTag()
-        createCountry()
-        loadProductStatus()
-        loadProductType()
+        # loadProductTag()
+        # createCountry()
+        # loadProductStatus()
+        # loadProductType()
