@@ -30,7 +30,8 @@ class ProductWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model=Product
         exclude=[
-            "slug"
+            "slug",
+            "created_by"
         ]
 
     def validate_tag(self, value):

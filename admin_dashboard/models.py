@@ -51,7 +51,7 @@ class Product(BaseModel):
     description=models.TextField()
     slug=models.SlugField(null=True)
     currency=models.CharField(choices=CURRENCY,max_length=100,default="NG")
-    # created_by=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name="products",null=True,blank=True)
+    created_by=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name="products",null=True,blank=True)
     price=models.DecimalField(decimal_places=2,max_digits=10,default=0.00)
     productStatus=models.ForeignKey(ProductStatus,on_delete=models.SET_NULL,related_name="products",null=True)
     productCategory=models.CharField(choices=PRODUCT_CATEGORY,max_length=500,null=True,blank=True)
@@ -106,3 +106,8 @@ class BlogImage(BaseModel):
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now=True)
 
+# class MostViewPage(models.Model):
+#     count=models.BigIntegerField(default=1)
+#     month=models.CharField(max_length=20,null=True)
+#     year=models.CharField(null=True,max_length=7)
+#     created_at=models.DateTimeField(auto_now_add=True,null=True)

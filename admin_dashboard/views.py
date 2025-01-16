@@ -18,8 +18,23 @@ from rest_framework.permissions import (
 )
 from drf_yasg.utils import swagger_auto_schema
 from django.db import transaction
+from properties.models import (
+    Messages,
+    Bookings,
+    Appointment
+)
+from properties.serializers import (
+    MessageWriteSerializer,
+    BookingReadSerializer,
+    SingleBookingReadSerializer,
+    SingleAppointmentReadSerializer,
+    AppointmentWriteSerializer
+
+)
 # Create your views here.
 
+
+ACCESS_DENIED="ACCESS_DENIED"
 
 class ProductApiview(APIView):
     parser_classes=[
@@ -37,9 +52,16 @@ class ProductApiview(APIView):
     def post(self,request):
         try:
             with transaction.atomic():
+                if not request.user.is_host():
+                    return app_response(
+                        success=False,
+                        data=None,
+                        message=ACCESS_DENIED,
+                        http_status=status.HTTP_403_FORBIDDEN
+                    )   
                 serializer=ProductWriteSerializer(data=request.data)
                 serializer.is_valid(raise_exception=True)
-                serializer.save()
+                serializer.save(created_by=request.user)
             return app_response(
                 success=True,
                 data=serializer.data,
@@ -65,6 +87,13 @@ class ProductApiview(APIView):
         try:
             page=int(request.GET.get("page",0))
             limit=int(request.GET.get("limit",10))
+            if not request.user.is_host():
+                return app_response(
+                    success=False,
+                    data=None,
+                    message=ACCESS_DENIED,
+                    http_status=status.HTTP_403_FORBIDDEN
+                )   
             queryset=Product.objects.select_related(
                 # "created_by"
             ).prefetch_related(
@@ -108,6 +137,13 @@ class SingleProductApiview(APIView):
     )
     def put(self,request,product_id):
         try:
+            if not request.user.is_host():
+                return app_response(
+                    success=False,
+                    data=None,
+                    message=ACCESS_DENIED,
+                    http_status=status.HTTP_403_FORBIDDEN
+                )   
             instance=Product.objects.get(id=product_id)
             serializer=ProductWriteSerializer(instance=instance,data=request.data)
             serializer.is_valid(raise_exception=True)
@@ -151,6 +187,13 @@ class SingleProductApiview(APIView):
 
     def delete(self,request,product_id):
         try:
+            if not request.user.is_host():
+                return app_response(
+                    success=False,
+                    data=None,
+                    message=ACCESS_DENIED,
+                    http_status=status.HTTP_403_FORBIDDEN
+                )   
             queryset=Product.objects.get(id=product_id)
             queryset.delete()
             return app_response(
@@ -222,6 +265,13 @@ class BlogAPiView(APIView):
     )
     def get(self,request):
         try:
+            if not request.user.is_host():
+                return app_response(
+                    success=False,
+                    data=None,
+                    message=ACCESS_DENIED,
+                    http_status=status.HTTP_403_FORBIDDEN
+                )   
             page=int(request.GET.get("page",0))
             limit=int(request.GET.get("limit",10))
             queryset=Blog.objects.select_related(
@@ -255,6 +305,13 @@ class BlogAPiView(APIView):
     )
     def post(self,request):
         try:
+            if not request.user.is_host():
+                return app_response(
+                    success=False,
+                    data=None,
+                    message=ACCESS_DENIED,
+                    http_status=status.HTTP_403_FORBIDDEN
+                )   
             serializer=WriteBlogSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             serializer.save(created_by=request.user)
@@ -281,6 +338,13 @@ class SingleBlogApiView(APIView):
     
     def delete(self,request,blog_id):
         try:
+            if not request.user.is_host():
+                return app_response(
+                    success=False,
+                    data=None,
+                    message=ACCESS_DENIED,
+                    http_status=status.HTTP_403_FORBIDDEN
+                )   
             queryset=Blog.objects.get(id=blog_id)
             queryset.delete()
             return app_response(
@@ -302,6 +366,13 @@ class SingleBlogApiView(APIView):
     )
     def put(self,request,blog_id):
         try:
+            if not request.user.is_host():
+                return app_response(
+                    success=False,
+                    data=None,
+                    message=ACCESS_DENIED,
+                    http_status=status.HTTP_403_FORBIDDEN
+                )   
             instance=Blog.objects.get(id=blog_id)
             serializer=WriteBlogSerializer(instance=instance,data=request.data)
             serializer.is_valid(raise_exception=True)
@@ -319,3 +390,321 @@ class SingleBlogApiView(APIView):
                 message=error_handler(e),
                 http_status=status.HTTP_400_BAD_REQUEST
             )      
+        
+class AllMessageApiView(APIView):
+
+    @swagger_auto_schema(
+            manual_parameters=[
+                Parameter("page", IN_QUERY, type="int", required=False),
+                Parameter("limit", IN_QUERY, type="int", required=False),
+            ]
+    )
+    def get(self,request):
+        try:
+            if not request.user.is_host():
+                return app_response(
+                    success=False,
+                    data=None,
+                    message=ACCESS_DENIED,
+                    http_status=status.HTTP_403_FORBIDDEN
+                )   
+            page=int(request.GET.get("page",0))
+            limit=int(request.GET.get("limit",10))
+            queryset=Messages.objects.order_by("-createdAt")
+            paginated=queryset[(page * limit) : (page * limit) + limit]
+            total_items=queryset.count()
+            meta_data={
+                "total_page":math.ceil(total_items / limit),
+                "current_page":page,
+                "per_page":limit,
+                "total_items":total_items
+            },
+            return app_response(
+                success=True,
+                data=MessageWriteSerializer(paginated,many=True).data,
+                message="Message Fetched",
+                meta_data=meta_data,
+                http_status=status.HTTP_200_OK
+            )      
+        except Exception as e:
+            return app_response(
+                success=False,
+                data=None,
+                message=error_handler(e),
+                http_status=status.HTTP_400_BAD_REQUEST
+            )    
+        
+class SingleMessageApiView(APIView):
+    def get(self,request,message_id):
+        try:
+            if not request.user.is_host():
+                return app_response(
+                    success=False,
+                    data=None,
+                    message=ACCESS_DENIED,
+                    http_status=status.HTTP_403_FORBIDDEN
+                )   
+            queryset=Messages.objects.get(id=message_id)
+            return app_response(
+                success=True,
+                data=MessageWriteSerializer(queryset).data,
+                message="Message Fetched",
+                http_status=status.HTTP_200_OK
+            )      
+        except Exception as e:
+            return app_response(
+                success=False,
+                data=None,
+                message=error_handler(e),
+                http_status=status.HTTP_400_BAD_REQUEST
+            )       
+        
+    def delete(self,request,message_id):
+        try:
+            if not request.user.is_host():
+                return app_response(
+                    success=False,
+                    data=None,
+                    message=ACCESS_DENIED,
+                    http_status=status.HTTP_403_FORBIDDEN
+                )   
+            queryset=Messages.objects.get(id=message_id)
+            queryset.delete()
+            return app_response(
+                success=True,
+                data=None,
+                message="Message Deleted",
+                http_status=status.HTTP_200_OK
+            )      
+        except Exception as e:
+            return app_response(
+                success=False,
+                data=None,
+                message=error_handler(e),
+                http_status=status.HTTP_400_BAD_REQUEST
+            )       
+        
+class BookingsApiview(APIView):
+    @swagger_auto_schema(
+            manual_parameters=[
+                Parameter("page", IN_QUERY, type="int", required=False),
+                Parameter("limit", IN_QUERY, type="int", required=False),
+            ]
+    )
+    def get(self,request):
+        try:
+            if not request.user.is_host():
+                return app_response(
+                    success=False,
+                    data=None,
+                    message=ACCESS_DENIED,
+                    http_status=status.HTTP_403_FORBIDDEN
+                )   
+            page=int(request.GET.get("page",0))
+            limit=int(request.GET.get("limit",10))
+            queryset=Bookings.objects.order_by("-createdAt")
+            paginated=queryset[(page * limit) : (page * limit) + limit]
+            total_items=queryset.count()
+            meta_data={
+                "total_page":math.ceil(total_items / limit),
+                "current_page":page,
+                "per_page":limit,
+                "total_items":total_items
+            },
+            return app_response(
+                success=True,
+                data=BookingReadSerializer(paginated,many=True).data,
+                message="Message Fetched",
+                meta_data=meta_data,
+                http_status=status.HTTP_200_OK
+            )      
+        except Exception as e:
+            return app_response(
+                success=False,
+                data=None,
+                message=error_handler(e),
+                http_status=status.HTTP_400_BAD_REQUEST
+            )    
+
+class SingleBookingsApiview(APIView):
+    class BookingStatusSerializer(serializers.ModelSerializer):
+        class Meta:
+            model=Bookings
+            fields=[
+                "bookingStatus"
+            ]
+    def get(self,request,booking_id):
+        try:
+            if not request.user.is_host():
+                return app_response(
+                    success=False,
+                    data=None,
+                    message=ACCESS_DENIED,
+                    http_status=status.HTTP_403_FORBIDDEN
+                )   
+            queryset=Bookings.objects.get(id=booking_id)
+            return app_response(
+                success=True,
+                data=SingleBookingReadSerializer(queryset).data,
+                message="Message Fetched",
+                http_status=status.HTTP_200_OK
+            )      
+        except Exception as e:
+            return app_response(
+                success=False,
+                data=None,
+                message=error_handler(e),
+                http_status=status.HTTP_400_BAD_REQUEST
+            ) 
+        
+    @swagger_auto_schema(
+            request_body=BookingStatusSerializer
+    )
+    def put(self,request,booking_id):
+        try:
+            if not request.user.is_host():
+                return app_response(
+                    success=False,
+                    data=None,
+                    message=ACCESS_DENIED,
+                    http_status=status.HTTP_403_FORBIDDEN
+                )   
+            queryset=Bookings.objects.get(id=booking_id)
+            serializer=self.BookingStatusSerializer(instance=queryset,data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return app_response(
+                success=True,
+                data=None,
+                message="Message updated",
+                http_status=status.HTTP_200_OK
+            )      
+        except Exception as e:
+            return app_response(
+                success=False,
+                data=None,
+                message=error_handler(e),
+                http_status=status.HTTP_400_BAD_REQUEST
+            )             
+        
+    def delete(self,request,booking_id):
+        try:
+            if not request.user.is_host():
+                return app_response(
+                    success=False,
+                    data=None,
+                    message=ACCESS_DENIED,
+                    http_status=status.HTTP_403_FORBIDDEN
+                )   
+            queryset=Bookings.objects.get(id=booking_id)
+            queryset.delete()
+            return app_response(
+                success=True,
+                data=None,
+                message="Message Deleted",
+                http_status=status.HTTP_200_OK
+            )      
+        except Exception as e:
+            return app_response(
+                success=False,
+                data=None,
+                message=error_handler(e),
+                http_status=status.HTTP_400_BAD_REQUEST
+            )       
+
+class AppointmentAPiView(APIView):
+    @swagger_auto_schema(
+            manual_parameters=[
+                Parameter("page", IN_QUERY, type="int", required=False),
+                Parameter("limit", IN_QUERY, type="int", required=False),
+            ]
+    )
+    def get(self,request):
+        try:
+            if not request.user.is_host():
+                return app_response(
+                    success=False,
+                    data=None,
+                    message=ACCESS_DENIED,
+                    http_status=status.HTTP_403_FORBIDDEN
+                )   
+            page=int(request.GET.get("page",0))
+            limit=int(request.GET.get("limit",10))
+            queryset=Appointment.objects.order_by("-createdAt")
+            paginated=queryset[(page * limit) : (page * limit) + limit]
+            total_items=queryset.count()
+            meta_data={
+                "total_page":math.ceil(total_items / limit),
+                "current_page":page,
+                "per_page":limit,
+                "total_items":total_items
+            },
+            return app_response(
+                success=True,
+                data=AppointmentWriteSerializer(paginated,many=True).data,
+                message="Message Fetched",
+                meta_data=meta_data,
+                http_status=status.HTTP_200_OK
+            )      
+        except Exception as e:
+            return app_response(
+                success=False,
+                data=None,
+                message=error_handler(e),
+                http_status=status.HTTP_400_BAD_REQUEST
+            ) 
+
+class SingleAppointmentAPiView(APIView):
+
+    def get(self,request,appointment_id):
+        try:
+            if not request.user.is_host():
+                return app_response(
+                    success=False,
+                    data=None,
+                    message=ACCESS_DENIED,
+                    http_status=status.HTTP_403_FORBIDDEN
+                )   
+            queryset=Appointment.objects.get(id=appointment_id)
+            return app_response(
+                success=True,
+                data=SingleAppointmentReadSerializer(queryset).data,
+                message="Message Fetched",
+                http_status=status.HTTP_200_OK
+            )      
+        except Exception as e:
+            return app_response(
+                success=False,
+                data=None,
+                message=error_handler(e),
+                http_status=status.HTTP_400_BAD_REQUEST
+            ) 
+        
+        
+    def delete(self,request,appointment_id):
+        try:
+            if not request.user.is_host():
+                return app_response(
+                    success=False,
+                    data=None,
+                    message=ACCESS_DENIED,
+                    http_status=status.HTTP_403_FORBIDDEN
+                )   
+            queryset=Appointment.objects.get(id=appointment_id)
+            queryset.delete()
+            return app_response(
+                success=True,
+                data=None,
+                message="Message Deleted",
+                http_status=status.HTTP_200_OK
+            )      
+        except Exception as e:
+            return app_response(
+                success=False,
+                data=None,
+                message=error_handler(e),
+                http_status=status.HTTP_400_BAD_REQUEST
+            )       
+
+class DashBoardApiView(APIView):
+    pass
