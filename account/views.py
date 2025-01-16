@@ -45,34 +45,34 @@ class UserRegistrationApiView(APIView):
                 http_status=status.HTTP_400_BAD_REQUEST
             )
 
-# class AdminRegistrationApiView(APIView):
-#     permission_classes=[]
+class AdminRegistrationApiView(APIView):
+    permission_classes=[]
 
-#     @swagger_auto_schema(
-#             request_body=AccountCreationSerializer
-#     )
-#     def post(self,request):
-#         try:
-#             serializer=AccountCreationSerializer(data=request.data)
-#             serializer.is_valid(raise_exception=True)
-#             user=serializer.save()
-#             user.role.add(
-#                 Role.objects.get(role="USER")
-#             )
-#             user.save()
-#             return app_response(
-#                 success=True,
-#                 data=serializer.data,
-#                 message="user created successfully",
-#                 http_status=status.HTTP_201_CREATED
-#             )
-#         except Exception as e:
-#             return app_response(
-#                 success=False,
-#                 data=None,
-#                 message=error_handler(e),
-#                 http_status=status.HTTP_400_BAD_REQUEST
-#             )
+    @swagger_auto_schema(
+            request_body=AccountCreationSerializer
+    )
+    def post(self,request):
+        try:
+            serializer=AccountCreationSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            user=serializer.save()
+            user.role.add(
+                Role.objects.get(role="HOST")
+            )
+            user.save()
+            return app_response(
+                success=True,
+                data=serializer.data,
+                message="user created successfully",
+                http_status=status.HTTP_201_CREATED
+            )
+        except Exception as e:
+            return app_response(
+                success=False,
+                data=None,
+                message=error_handler(e),
+                http_status=status.HTTP_400_BAD_REQUEST
+            )
         
 class LoginUserAPiView(TokenObtainPairView):
     serializer_class = TokenObtainPairSerializer
