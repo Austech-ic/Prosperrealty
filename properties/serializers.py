@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import *
+from account.serializers import UserSerializer
 
 class BookingWriteSerializer(serializers.ModelSerializer):
     class Meta:
@@ -35,3 +36,20 @@ class CommentSerializer(serializers.ModelSerializer):
         exclude=[
             "blog"
         ]
+
+
+class AppointmentWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Appointment
+        exclude=[
+            "agentDetail",
+            "userDetail"
+        ]
+
+class SingleAppointmentReadSerializer(serializers.ModelSerializer):
+    agentDetail=UserSerializer()
+    userDetail=UserSerializer()
+    class Meta:
+        model=Appointment
+        fields="__all__"
+        

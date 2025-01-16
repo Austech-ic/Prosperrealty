@@ -14,4 +14,5 @@ urlpatterns = [
    path("state/local-govt/<str:state_name>/",LocalGovernmentApiView.as_view()),
    path("product/type/",ProductTypeApiView.as_view()),
    path("product/status/",ProductStatusApiView.as_view()),
+   path("appointments/",AppointmentApiView.as_view())
 ]

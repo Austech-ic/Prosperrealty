@@ -12,6 +12,7 @@ from .serializers import (
 from utils.app_response import app_response
 from utils.error_handler import error_handler
 from rest_framework_simplejwt.views import (TokenObtainPairView)
+from .models import Role
 
 
 # Create your views here.
@@ -25,7 +26,11 @@ class UserRegistrationApiView(APIView):
         try:
             serializer=AccountCreationSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
-            serializer.save()
+            user=serializer.save()
+            user.role.add(
+                Role.objects.get(role="USER")
+            )
+            user.save()
             return app_response(
                 success=True,
                 data=serializer.data,
@@ -39,6 +44,35 @@ class UserRegistrationApiView(APIView):
                 message=error_handler(e),
                 http_status=status.HTTP_400_BAD_REQUEST
             )
+
+# class AdminRegistrationApiView(APIView):
+#     permission_classes=[]
+
+#     @swagger_auto_schema(
+#             request_body=AccountCreationSerializer
+#     )
+#     def post(self,request):
+#         try:
+#             serializer=AccountCreationSerializer(data=request.data)
+#             serializer.is_valid(raise_exception=True)
+#             user=serializer.save()
+#             user.role.add(
+#                 Role.objects.get(role="USER")
+#             )
+#             user.save()
+#             return app_response(
+#                 success=True,
+#                 data=serializer.data,
+#                 message="user created successfully",
+#                 http_status=status.HTTP_201_CREATED
+#             )
+#         except Exception as e:
+#             return app_response(
+#                 success=False,
+#                 data=None,
+#                 message=error_handler(e),
+#                 http_status=status.HTTP_400_BAD_REQUEST
+#             )
         
 class LoginUserAPiView(TokenObtainPairView):
     serializer_class = TokenObtainPairSerializer

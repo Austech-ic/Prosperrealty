@@ -9,5 +9,11 @@ urlpatterns = [
     path("dashboard/blog/",BlogAPiView.as_view()),
     path("dashboard/blog/tag/",BlogTagApiView.as_view()),
     path("dashboard/blog/<uuid:blog_id>/",SingleBlogApiView.as_view()),
+    path("dashboard/message/",AllMessageApiView.as_view()),
+    path("dashboard/message/<uuid:message_id>/",SingleMessageApiView.as_view()),
+    path("dashboard/bookings/",BookingsApiview.as_view()),
+    path("dashboard/booking/<uuid:booking_id>/",SingleBookingsApiview.as_view()),
+    path("dashboard/appointment/",AppointmentAPiView.as_view()),
+    path("dashboard/appointment/<uuid:appointment_id>/",SingleAppointmentAPiView.as_view())
     
 ]
