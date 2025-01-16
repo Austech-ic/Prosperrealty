@@ -186,7 +186,8 @@ CORS_EXPOSE_HEADERS = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
-    "https://prosperrealty.onrender.com"
+    "https://prosperrealty.onrender.com",
+    "http://localhost:3000",
 ]
 CORS_ALLOW_ALL_ORIGINS=False
 
