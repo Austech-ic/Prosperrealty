@@ -71,7 +71,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    "prospereality_api.middleware.BlogViewPageMiddleware"
+    "prospereality_api.middleware.BlogViewPageMiddleware",
+    "prospereality_api.middleware.VisitorsMiddleware"
 ]
 
 ROOT_URLCONF = 'prospereality_api.urls'

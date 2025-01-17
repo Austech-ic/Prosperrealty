@@ -106,8 +106,8 @@ class BlogImage(BaseModel):
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now=True)
 
-# class MostViewPage(models.Model):
-#     count=models.BigIntegerField(default=1)
-#     month=models.CharField(max_length=20,null=True)
-#     year=models.CharField(null=True,max_length=7)
-#     created_at=models.DateTimeField(auto_now_add=True,null=True)
+class Visitors(BaseModel):
+    count=models.BigIntegerField(default=1)
+    month=models.CharField(max_length=20,null=True)
+    year=models.CharField(null=True,max_length=7)
+    created_at=models.DateTimeField(auto_now_add=True,null=True)

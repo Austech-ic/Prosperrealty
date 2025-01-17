@@ -1,12 +1,13 @@
+import calendar
 import random
 from .services import load_state,load_local_govt
 from .models import (State,
                     LocalGovt,
-                    Country,ProductStatus,ProductType)
+                    Country,ProductStatus,ProductType,Visitors)
 from .contants import COUNTRY
 from .models import ProductTag
 from .contants import TAG,PRODUCT_TYPE,PROPERTY_STATUS
-
+from django.utils.timezone import now
 
 def createCountry():
     try:
@@ -72,3 +73,24 @@ def loadProductType():
                 "name":tag
             }
         )
+
+
+def get_analytics(year) -> list:
+    """Returns the monthly analytics of the invoices passed as parameter"""
+    result = [
+        {
+            "month": calendar.month_abbr[month_no],
+            "point":Visitors.objects.filter(
+                month=calendar.month_abbr[month_no],
+                year=str(year)
+            ).first().count
+            if Visitors.objects.filter(
+                month=calendar.month_abbr[month_no],
+                year=str(year)
+            ).first()
+            else int(0),
+        }
+        for month_no in range(1, 13)
+    ]
+
+    return result

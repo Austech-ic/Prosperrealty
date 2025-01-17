@@ -14,6 +14,8 @@ urlpatterns = [
     path("dashboard/bookings/",BookingsApiview.as_view()),
     path("dashboard/booking/<uuid:booking_id>/",SingleBookingsApiview.as_view()),
     path("dashboard/appointment/",AppointmentAPiView.as_view()),
-    path("dashboard/appointment/<uuid:appointment_id>/",SingleAppointmentAPiView.as_view())
+    path("dashboard/appointment/<uuid:appointment_id>/",SingleAppointmentAPiView.as_view()),
+    path("dashboard/",DashBoardApiView.as_view()),
+    path("dashboard/analytics/",AnalyticsAPiView.as_view())
     
 ]
