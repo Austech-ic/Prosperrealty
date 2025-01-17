@@ -730,6 +730,7 @@ class DashBoardApiView(APIView):
             totalProperty=Product.objects.count()
             totalAppointment=Appointment.objects.count()
             totalBooking=Bookings.objects.count()
+            blog=Blog.objects.select_related("created_by").prefetch_related("comments").order_by("-createdAt")[:3]
     
             visitors = Visitors.objects.annotate(
                 is_current_month=Case(
@@ -760,9 +761,9 @@ class DashBoardApiView(APIView):
                 "totalBooking":totalBooking,
                 "totalProperty":totalProperty,
                 "totalAppointment":totalAppointment,
-                "percentageIncrease": round(percentage_increase, 2)
-                # "article":BlogSerializer(article,many=True).data,
-                # "top_browser":DeviceSerializer(device_counts,many=True).data if device_counts != None else None
+                "percentageIncrease": round(percentage_increase, 2),
+                "blog":DashbordBlogReadSerializer(blog,many=True).data,
+               
             }
             return app_response(
                 success=False,

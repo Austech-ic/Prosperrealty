@@ -44,7 +44,7 @@ class Messages(BaseModel):
     updatedAt = models.DateTimeField(auto_now=True)
 
 class Comment(BaseModel):
-    blog=models.ForeignKey(Blog,on_delete=models.CASCADE,null=False,blank=False)
+    blog=models.ForeignKey(Blog,on_delete=models.CASCADE,null=False,blank=False,related_name="comments")
     text=models.CharField()
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now=True)

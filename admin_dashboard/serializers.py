@@ -197,6 +197,27 @@ class SingleBlogReadSerializer(serializers.ModelSerializer):
         return obj.views.first().count if obj.views.first() else 0
     
 
+class DashbordBlogReadSerializer(serializers.ModelSerializer):
+    viewsCount=serializers.SerializerMethodField()
+    commentCount=serializers.SerializerMethodField()
+    class Meta:
+        model=Blog
+        fields=[
+            "title",
+            "createdAt",
+            "updatedAt",
+            "viewsCount",
+            "commentCount"
+        ]
+
+
+    def get_viewsCount(self,obj):
+        return obj.views.first().count if obj.views.first() else 0
+    
+    def get_commentCount(self,obj):
+        return obj.comments.count()
+    
+
 class StateGetSerializer(serializers.ModelSerializer):
     class Meta:
         model=State
