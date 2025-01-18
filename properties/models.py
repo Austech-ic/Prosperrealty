@@ -20,17 +20,25 @@ class Bookings(BaseModel):
     email=models.EmailField(null=True)
     initiated_by=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name="bookings",null=True)
     phoneNumber=models.CharField(max_length=20,null=True,blank=True)
-    title=models.CharField(max_length=20,null=True)
-    firstName=models.CharField(max_length=225,null=True)
-    lastName=models.CharField(max_length=225,null=True)
-    dateOfBirth=models.DateField(null=True,blank=True)
-    address=models.TextField(null=True,blank=True)
-    location=models.CharField(max_length=225,null=True,blank=True)
-    country=models.CharField(max_length=225,null=True,blank=True)
+    fullName=models.CharField(max_length=225,null=True)
     bookingStatus=models.CharField(max_length=30,default="pending",choices=BOOKING_STATUS)
     specialRequest=models.TextField(null=True)
+    adultsCount=models.BigIntegerField(default=0)
+    childrenCount=models.BigIntegerField(default=0)
+    infantsCount=models.BigIntegerField(default=0)
+    petCount=models.BigIntegerField(default=0)
+    checkInDate=models.DateField(null=True)
+    checkOutDate=models.DateField(null=True)
+    stayDuration=models.BigIntegerField(default=0)
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        if self.checkInDate and self.checkOutDate:
+            self.stayDuration = (self.checkOutDate - self.checkInDate).days
+        else:
+            self.stayDuration = 0
+        super().save(*args, **kwargs)
 
 class Messages(BaseModel):
     firstName=models.CharField(max_length=225,null=True)

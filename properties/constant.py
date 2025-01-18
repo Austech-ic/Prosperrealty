@@ -8,5 +8,6 @@ BOOKING_STATUS=[
 
 CONTACT_METHOD=[
     ("in_person","In_Person"),
+    ("virtual","Virtual"),
 
 ]
