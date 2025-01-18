@@ -38,7 +38,6 @@ class BlogViewPageMiddleware(MiddlewareMixin):
         return None
 
 
-
 class VisitorsMiddleware(MiddlewareMixin):
         
     def process_request(self, request):

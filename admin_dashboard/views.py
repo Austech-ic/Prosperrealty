@@ -538,13 +538,13 @@ class SingleBookingsApiview(APIView):
             ]
     def get(self,request,booking_id):
         try:
-            if not request.user.is_host():
-                return app_response(
-                    success=False,
-                    data=None,
-                    message=ACCESS_DENIED,
-                    http_status=status.HTTP_403_FORBIDDEN
-                )   
+            # if not request.user.is_host():
+            #     return app_response(
+            #         success=False,
+            #         data=None,
+            #         message=ACCESS_DENIED,
+            #         http_status=status.HTTP_403_FORBIDDEN
+            #     )   
             queryset=Bookings.objects.get(id=booking_id)
             return app_response(
                 success=True,

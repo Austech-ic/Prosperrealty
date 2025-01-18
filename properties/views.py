@@ -229,6 +229,42 @@ class ProductBookingApiView(APIView):
                 data=None,
                 message=error_handler(e),
                 http_status=status.HTTP_400_BAD_REQUEST
+            )  
+             
+    @swagger_auto_schema(
+            manual_parameters=[
+                Parameter("page", IN_QUERY, type="int", required=False),
+                Parameter("limit", IN_QUERY, type="int", required=False),
+            ]
+    ) 
+    def get(self,request):
+        try:
+            page=int(request.GET.get("page",0))
+            limit=int(request.GET.get("limit",10))
+            queryset=Bookings.objects.filter(
+                initiated_by=request.user
+            ).order_by("-createdAt")
+            paginated=queryset[(page * limit) : (page * limit) + limit]
+            total_items=queryset.count()
+            meta_data={
+                "total_page":math.ceil(total_items / limit),
+                "current_page":page,
+                "per_page":limit,
+                "total_items":total_items
+            },
+            return app_response(
+                success=True,
+                data=BookingReadSerializer(paginated,many=True).data,
+                message="Message Fetched",
+                meta_data=meta_data,
+                http_status=status.HTTP_200_OK
+            )      
+        except Exception as e:
+            return app_response(
+                success=False,
+                data=None,
+                message=error_handler(e),
+                http_status=status.HTTP_400_BAD_REQUEST
             )       
         
 class MessageWriteApiView(APIView):
@@ -458,3 +494,4 @@ class AppointmentApiView(APIView):
                 message=error_handler(e),
                 http_status=status.HTTP_400_BAD_REQUEST
             )  
+        
