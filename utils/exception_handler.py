@@ -22,7 +22,7 @@ def custom_exception_handler(exc, context):
                 "data": None,
                 "message": "ACCOUNT NOT FOUND,PLEASE CHECK YOUR EMAIL AND PASSWORD"
             }
-            return Response(res, status=status.HTTP_404_NOT_FOUND)
+            return Response(res, status=status.HTTP_401_UNAUTHORIZED)
         
     if response is not None and response.status_code == status.HTTP_401_UNAUTHORIZED:
         if 'user_not_found' in str(response.data.get('code', '')):
