@@ -59,5 +59,13 @@ def custom_exception_handler(exc, context):
                 "message": "TOKEN IS EXPIRED OR INVALID,PLEASE LOGIN AGAIN"
             }
             return Response(res, status=status.HTTP_401_UNAUTHORIZED)
+        
+    if response is not None and response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR:
+            res = {
+                "status": "Failed",
+                "data": None,
+                "message": "INTERNAL_SERVER_ERROR"
+            }
+            return Response(res, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     return response
