@@ -62,6 +62,7 @@ class AccountCreationSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     image=Base64ImagesField(required=False)
     email=serializers.EmailField(read_only=True)
+    role=serializers.SerializerMethodField(read_only=True)
     class Meta:
         model=get_user_model()
         fields=[
@@ -71,7 +72,8 @@ class UserSerializer(serializers.ModelSerializer):
             "gender",
             "nationality",
             "address",
-            "phoneNumber"
+            "phoneNumber",
+            "role"
         ]
 
     extra_kwargs={
@@ -79,6 +81,9 @@ class UserSerializer(serializers.ModelSerializer):
             "read_only":True
         }
     }
+
+    def get_role(self,obj):
+        return [role.role for role in obj.role.all()]
 
 class UserWriteSerializer(serializers.ModelSerializer):
     image=Base64ImagesField(required=False)
