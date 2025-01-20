@@ -492,6 +492,8 @@ class BookingsApiview(APIView):
             manual_parameters=[
                 Parameter("page", IN_QUERY, type="int", required=False),
                 Parameter("limit", IN_QUERY, type="int", required=False),
+                Parameter("search",IN_QUERY, type="str", required=False,description=
+                          "You can search by confirmation number")
             ]
     )
     def get(self,request):
@@ -505,7 +507,10 @@ class BookingsApiview(APIView):
                 )   
             page=int(request.GET.get("page",0))
             limit=int(request.GET.get("limit",10))
+            search=request.GET.get("search",None)
             queryset=Bookings.objects.order_by("-createdAt")
+            if search:
+                queryset=queryset.filter(confirmationNumber=search)
             paginated=queryset[(page * limit) : (page * limit) + limit]
             total_items=queryset.count()
             meta_data={

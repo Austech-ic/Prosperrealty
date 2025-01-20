@@ -30,6 +30,7 @@ class Bookings(BaseModel):
     checkInDate=models.DateField(null=True)
     checkOutDate=models.DateField(null=True)
     stayDuration=models.BigIntegerField(default=0)
+    confirmationNumber=models.CharField(max_length=10,null=True)
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now=True)
 

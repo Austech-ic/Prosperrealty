@@ -9,7 +9,8 @@ class BookingWriteSerializer(serializers.ModelSerializer):
         exclude=[
             "bookingStatus",
             "initiated_by",
-            "stayDuration"
+            "stayDuration",
+            "confirmationNumber"
         ]
         extra_kwargs={
             "checkInDate":{
