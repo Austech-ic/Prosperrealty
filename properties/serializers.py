@@ -84,6 +84,12 @@ class AppointmentWriteSerializer(serializers.ModelSerializer):
             "userDetail"
         ]
 
+    def validate(self, attrs):
+        preferredDate=attrs["preferredDate"]
+        if preferredDate < now().date():
+            raise RuntimeError("Preferred Date can't be less than today")
+        return super().validate(attrs)
+
 class SingleAppointmentReadSerializer(serializers.ModelSerializer):
     agentDetail=UserSerializer()
     userDetail=UserSerializer()
