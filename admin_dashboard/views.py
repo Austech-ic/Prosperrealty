@@ -318,6 +318,7 @@ class BlogAPiView(APIView):
             serializer=WriteBlogSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             serializer.save(created_by=request.user)
+            
             return app_response(
                 success=True,
                 data=serializer.data,

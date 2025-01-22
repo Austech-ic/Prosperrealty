@@ -14,7 +14,7 @@ class Base64ImagesField(Base64ImageField):
 
 class ImagesSerializer(serializers.Serializer):
     id=serializers.UUIDField(required=False,allow_null=True)
-    image=Base64ImagesField(required=True)
+    image=Base64ImagesField(required=False)
 
 class ProductTagSerializer(serializers.ModelSerializer):
     class Mata:
@@ -48,7 +48,7 @@ class ProductWriteSerializer(serializers.ModelSerializer):
             for image in images:
                 ProductImage.objects.create(
                     product=product,
-                    image=image
+                    **image
                 )
         return product
     
@@ -129,12 +129,15 @@ class WriteBlogSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         images=validated_data.pop("images",None)
         blog= super().create(validated_data)
+        
         if images:
             for image in images:
                 BlogImage.objects.create(
                     blog=blog,
-                    image=image
+                    **image
+                    # image=image["image"]
                 )
+        
         return blog
     
 

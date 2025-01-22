@@ -9,9 +9,10 @@ class AdminDashboardConfig(AppConfig):
 
 
     def ready(self):
-        from .helpers import createCountry,loadProductTag,loadProductStatus,loadProductType
+        from .helpers import createCountry,loadProductTag,loadProductStatus,loadProductType,loadblogType
 
         # loadProductTag()
         # createCountry()
         # loadProductStatus()
         # loadProductType()
+        loadblogType()

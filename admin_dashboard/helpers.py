@@ -3,10 +3,10 @@ import random
 from .services import load_state,load_local_govt
 from .models import (State,
                     LocalGovt,
-                    Country,ProductStatus,ProductType,Visitors)
+                    Country,ProductStatus,ProductType,Visitors,BlogTag)
 from .contants import COUNTRY
 from .models import ProductTag
-from .contants import TAG,PRODUCT_TYPE,PROPERTY_STATUS
+from .contants import TAG,PRODUCT_TYPE,PROPERTY_STATUS,BLOG_TAGS
 from django.utils.timezone import now
 
 def createCountry():
@@ -68,6 +68,16 @@ def loadProductStatus():
 def loadProductType():
     for tag in PRODUCT_TYPE:
         ProductType.objects.get_or_create(
+            name=tag,
+            defaults={
+                "name":tag
+            }
+        )
+
+
+def loadblogType():
+    for tag in BLOG_TAGS:
+        BlogTag.objects.get_or_create(
             name=tag,
             defaults={
                 "name":tag

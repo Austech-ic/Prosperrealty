@@ -57,3 +57,24 @@ TAG=[
 COUNTRY=[
     "Nigeria"
 ]
+
+BLOG_TAGS=[
+    "Real Estate Market",
+    "Property Trends",
+    "Housing Insights",
+    "Luxury Properties",
+    "Affordable Housing",
+    "Home Buying Tips",
+    "First-Time Homebuyers",
+    "Selling Strategies",
+    "Property Valuation",
+    "Open Houses",
+    "Real Estate Investing",
+    "Rental Income",
+    "Commercial Properties",
+    "Flipping Houses",
+    "Investment Strategies",
+    "Smart Home Technology",
+    "Online Listings",
+    "3D Home Tours"
+]
