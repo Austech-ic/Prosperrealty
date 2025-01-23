@@ -186,15 +186,15 @@ CORS_EXPOSE_HEADERS = [
     "auth_password",
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "https://prosperrealty.onrender.com",
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3000",
+#     "https://prosperrealty.onrender.com",
     
-]
+# ]
 
-CORS_ALLOW_ALL_ORIGINS=False
+# CORS_ALLOW_ALL_ORIGINS=False
 
-# CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOW_METHODS = (
     "DELETE",
