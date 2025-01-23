@@ -99,7 +99,7 @@ class ProductReadSerializer(serializers.ModelSerializer):
 
     
     def get_productStatus(self,obj):
-        return obj.productStatus.name
+        return obj.productStatus.name if obj.productStatus else None
 
 class ProductSingleReadSerializer(serializers.ModelSerializer):
     images=ImagesSerializer(many=True)
