@@ -109,7 +109,7 @@ class ProductApiview(APIView):
                 "current_page":page,
                 "per_page":limit,
                 "total_items":total_items
-            },
+            }
             return app_response(
                 success=True,
                 data=ProductReadSerializer(paginated,many=True).data,
@@ -287,7 +287,7 @@ class BlogAPiView(APIView):
                 "current_page":page,
                 "per_page":limit,
                 "total_items":total_items
-            },
+            }
             return app_response(
                 success=True,
                 data=BlogReadSerializer(paginated,many=True).data,
@@ -422,7 +422,7 @@ class AllMessageApiView(APIView):
                 "current_page":page,
                 "per_page":limit,
                 "total_items":total_items
-            },
+            }
             return app_response(
                 success=True,
                 data=MessageWriteSerializer(paginated,many=True).data,
@@ -519,7 +519,7 @@ class BookingsApiview(APIView):
                 "current_page":page,
                 "per_page":limit,
                 "total_items":total_items
-            },
+            }
             return app_response(
                 success=True,
                 data=BookingReadSerializer(paginated,many=True).data,
@@ -647,7 +647,7 @@ class AppointmentAPiView(APIView):
                 "current_page":page,
                 "per_page":limit,
                 "total_items":total_items
-            },
+            }
             return app_response(
                 success=True,
                 data=AppointmentWriteSerializer(paginated,many=True).data,
@@ -772,7 +772,7 @@ class DashBoardApiView(APIView):
                
             }
             return app_response(
-                success=False,
+                success=True,
                 data=data,
                 message="Details Fetch",
                 http_status=status.HTTP_200_OK

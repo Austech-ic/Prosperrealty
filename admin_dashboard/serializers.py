@@ -94,6 +94,9 @@ class ProductReadSerializer(serializers.ModelSerializer):
             "name",
             "productStatus",
             "frequency",
+            "sqft",
+            "bathroom",
+            "buildYear",
             "images"
         ]
 
