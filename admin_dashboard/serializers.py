@@ -55,7 +55,9 @@ class ProductWriteSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         images=validated_data.pop("images",None)
-
+        tags = validated_data.pop("tag", None)  # Pop 'tag' field from validated_data
+        if tags is not None:
+            instance.tag.set(tags) 
         image_Ids=[]
         if images: # Clear existing images
             for image_data in images:
@@ -148,6 +150,9 @@ class WriteBlogSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         images=validated_data.pop("images",None)
         image_Ids=[]
+        tags = validated_data.pop("tag", None)  # Pop 'tag' field from validated_data
+        if tags is not None:
+            instance.tag.set(tags) 
         if images: # Clear existing images
             for image_data in images:
                 image_id = image_data.get('id',None)
