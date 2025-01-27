@@ -84,12 +84,17 @@ class ProductApiview(APIView):
             manual_parameters=[
                 Parameter("page", IN_QUERY, type="int", required=False),
                 Parameter("limit", IN_QUERY, type="int", required=False),
+                Parameter("category", IN_QUERY, type="str", required=False,enum=[
+                    "for sales",
+                    "shortlet"
+                ]),
             ]
     )
     def get(self,request):
         try:
             page=int(request.GET.get("page",0))
             limit=int(request.GET.get("limit",10))
+            category=request.GET.get("category",None)
             if not request.user.is_host():
                 return app_response(
                     success=False,
@@ -102,6 +107,10 @@ class ProductApiview(APIView):
             ).prefetch_related(
                 "images","tag"
             ).order_by("-createdAt")
+            if category:
+                queryset=queryset.filter(
+                    productCategory=category
+                )
             paginated=queryset[(page * limit) : (page * limit) + limit]
             total_items=queryset.count()
             meta_data={
