@@ -100,7 +100,8 @@ class ProductReadSerializer(serializers.ModelSerializer):
             "bathroom",
             "buildYear",
             "bedroom",
-            "images"
+            "images",
+            "currency"
         ]
 
     
