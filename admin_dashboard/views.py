@@ -824,3 +824,58 @@ class AnalyticsAPiView(APIView):
                 data=None,
                 message=error_handler(e),
             )
+        
+
+
+# class DeleteProductImageApiview(APIView):
+#     def delete(self,request,product_id,image_id):
+#         try:
+#             if not request.user.is_host():
+#                 return app_response(
+#                     success=False,
+#                     data=None,
+#                     message=ACCESS_DENIED,
+#                     http_status=status.HTTP_403_FORBIDDEN
+#                 )   
+#             queryset=ProductImage.objects.get(id=image_id,product__id=product_id)
+#             queryset.delete()
+#             return app_response(
+#                 success=True,
+#                 data=None,
+#                 message="Message Deleted",
+#                 http_status=status.HTTP_200_OK
+#             )      
+#         except Exception as e:
+#             return app_response(
+#                 success=False,
+#                 data=None,
+#                 message=error_handler(e),
+#                 http_status=status.HTTP_400_BAD_REQUEST
+#             )
+
+
+# class DeleteBlogImageApiview(APIView):
+#     def delete(self,request,blog_id,image_id):
+#         try:
+#             if not request.user.is_host():
+#                 return app_response(
+#                     success=False,
+#                     data=None,
+#                     message=ACCESS_DENIED,
+#                     http_status=status.HTTP_403_FORBIDDEN
+#                 )   
+#             queryset=BlogImage.objects.get(id=image_id,blog__id=product_id)
+#             queryset.delete()
+#             return app_response(
+#                 success=True,
+#                 data=None,
+#                 message="Message Deleted",
+#                 http_status=status.HTTP_200_OK
+#             )      
+#         except Exception as e:
+#             return app_response(
+#                 success=False,
+#                 data=None,
+#                 message=error_handler(e),
+#                 http_status=status.HTTP_400_BAD_REQUEST
+#             )

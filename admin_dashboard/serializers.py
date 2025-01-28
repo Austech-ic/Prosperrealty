@@ -71,7 +71,7 @@ class ProductWriteSerializer(serializers.ModelSerializer):
                     requestImage=ProductImage.objects.create(product=instance,**image_data)
                     image_Ids.append(requestImage.id)
 
-            ProductImage.objects.filter(product=instance).exclude(id__in=image_Ids).delete()
+        ProductImage.objects.filter(product=instance).exclude(id__in=image_Ids).delete()
         # Update other fields
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
@@ -167,7 +167,7 @@ class WriteBlogSerializer(serializers.ModelSerializer):
                     requestImage=BlogImage.objects.create(blog=instance,**image_data)
                     image_Ids.append(requestImage.id)
 
-            BlogImage.objects.filter(blog=instance).exclude(id__in=image_Ids).delete()
+        BlogImage.objects.filter(blog=instance).exclude(id__in=image_Ids).delete()
         # Update other fields
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
