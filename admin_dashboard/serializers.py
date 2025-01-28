@@ -1,9 +1,9 @@
 from .models import *
 from rest_framework import serializers
-from drf_extra_fields.fields import Base64ImageField,Base64FileField
+from drf_extra_fields.fields import Base64ImageField,Base64FileField,HybridImageField
 from account.serializers import UserSerializer
 
-class Base64ImagesField(Base64ImageField):
+class Base64ImagesField(HybridImageField):
     class Meta:
         swagger_schema_fields = {
             'type': 'String',
