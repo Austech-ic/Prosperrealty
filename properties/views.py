@@ -141,7 +141,7 @@ class BlogAPiView(APIView):
             search=request.GET.get("search",None)
             queryset=Blog.objects.select_related(
                 "created_by"
-            ).prefetch_related("images").order_by("-created_at")
+            ).prefetch_related("images").order_by("-createdAt")
             if search:
                 queryset=queryset.filter(title__icontains=search)
             paginated=queryset[(page * limit) : (page * limit) + limit]
