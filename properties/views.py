@@ -272,6 +272,9 @@ class MessageWriteApiView(APIView):
     permission_classes=[
 
     ]
+    @swagger_auto_schema(
+            request_body=MessageWriteSerializer
+    )
     def post(self,request):
         try:
             serializer=MessageWriteSerializer(data=request.data)
@@ -295,6 +298,9 @@ class CommentApiView(APIView):
     permission_classes=[
 
     ]
+    @swagger_auto_schema(
+            request_body=CommentSerializer
+    )
     def post(self,request,blog_id):
         try:
             blog=Blog.objects.get(id=blog_id)
