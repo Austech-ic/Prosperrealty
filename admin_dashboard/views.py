@@ -471,8 +471,20 @@ class SingleMessageApiView(APIView):
                 message=error_handler(e),
                 http_status=status.HTTP_400_BAD_REQUEST
             )       
-        
-    def delete(self,request,message_id):
+
+
+class MessageMultipleDeleteAPiView(APIView):
+    class MessageIdSerializer(serializers.Serializer):
+        message_id=serializers.ListField(
+            child=serializers.UUIDField(),
+            required=True
+        )  
+
+     
+    @swagger_auto_schema(
+            request_body=MessageIdSerializer
+    )
+    def delete(self,request):
         try:
             if not request.user.is_host():
                 return app_response(
@@ -481,8 +493,10 @@ class SingleMessageApiView(APIView):
                     message=ACCESS_DENIED,
                     http_status=status.HTTP_403_FORBIDDEN
                 )   
-            queryset=Messages.objects.get(id=message_id)
-            queryset.delete()
+            serializer=self.MessageIdSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            instances=serializer.validated_data.get("message_id",None)
+            Messages.objects.filter(id__in=instances).delete()
             return app_response(
                 success=True,
                 data=None,
