@@ -4,7 +4,9 @@ CURRENCY=[
 ]
 FREQUENCY=[
     ("yearly","yearly"),
-    ("monthly","monthly")
+    ("monthly","monthly"),
+    ("daily","daily"),
+
 ]
 SPECIAL_CHARS_REGEX = "[^a-zA-Z0-9 \n\.]"
 
@@ -26,7 +28,7 @@ OTHERS=[
 PROPERTY_STATUS=[
     "Available",  # The product is available for sale/rent
     "Sold",            # For land that has been sold
-    "Booked",        # For apartments that have been rented
+    # "Booked",        # For apartments that have been rented
     "Completed",
     "Ongoing",
     "Coming Soon",
