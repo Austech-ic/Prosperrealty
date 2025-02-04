@@ -77,12 +77,18 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class AppointmentWriteSerializer(serializers.ModelSerializer):
+    userDetail=UserSerializer()
     class Meta:
         model=Appointment
         exclude=[
             "agentDetail",
-            "userDetail"
+            # "userDetail"
         ]
+        extra_kwargs={
+            "userDetail":{
+                "read_only":True
+            }
+        }
 
     def validate(self, attrs):
         preferredDate=attrs["preferredDate"]
