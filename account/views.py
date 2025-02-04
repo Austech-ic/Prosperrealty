@@ -13,6 +13,7 @@ from utils.app_response import app_response
 from utils.error_handler import error_handler
 from rest_framework_simplejwt.views import (TokenObtainPairView)
 from .models import Role
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 # Create your views here.
@@ -31,9 +32,13 @@ class UserRegistrationApiView(APIView):
                 Role.objects.get(role="USER")
             )
             user.save()
+            resp=serializer.data
+            token = RefreshToken.for_user(user)
+            resp["access_token"] = str(token.access_token)
+            resp["refresh_token"] = str(token)
             return app_response(
                 success=True,
-                data=serializer.data,
+                data=resp,
                 message="user created successfully",
                 http_status=status.HTTP_201_CREATED
             )
