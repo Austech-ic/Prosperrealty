@@ -254,6 +254,11 @@ class ProductStatusSerializer(serializers.ModelSerializer):
         fields="__all__"
 
 class ProductTypeSerializer(serializers.ModelSerializer):
+    productCount=serializers.SerializerMethodField()
     class Meta:
         model=ProductType
         fields="__all__"
+
+
+    def get_productCount(self,obj):
+        return obj.productTypes.count()
