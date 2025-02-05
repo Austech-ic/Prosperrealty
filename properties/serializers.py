@@ -78,6 +78,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
 class AppointmentWriteSerializer(serializers.ModelSerializer):
     userDetail=UserSerializer()
+    propertyName=serializers.SerializerMethodField(read_only=True)
     class Meta:
         model=Appointment
         exclude=[
@@ -95,6 +96,8 @@ class AppointmentWriteSerializer(serializers.ModelSerializer):
         if preferredDate < now().date():
             raise RuntimeError("Preferred Date can't be less than today")
         return super().validate(attrs)
+    
+
 
 class SingleAppointmentReadSerializer(serializers.ModelSerializer):
     agentDetail=UserSerializer()

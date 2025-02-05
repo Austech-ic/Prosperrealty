@@ -101,13 +101,14 @@ class ProductReadSerializer(serializers.ModelSerializer):
             "buildYear",
             "bedroom",
             "images",
-            "currency"
+            "currency",
+            "productCategory"
         ]
 
     
     def get_productStatus(self,obj):
         return obj.productStatus.name if obj.productStatus else None
-
+    
 class ProductSingleReadSerializer(serializers.ModelSerializer):
     images=ImagesSerializer(many=True)
     tag=ProductTagSerializer(many=True)

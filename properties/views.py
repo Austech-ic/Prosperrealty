@@ -59,6 +59,10 @@ class ProductApiview(APIView):
                 Parameter("low_price", IN_QUERY, type="str", required=False),
                 Parameter("search", IN_QUERY, type="str", required=False),
                 Parameter("property_status", IN_QUERY, type="str", required=False),
+                Parameter("product_category",IN_QUERY, type="str", required=False,enum=[
+                    "for sales",
+                    "shortlet"
+                ])
 
             ]
     )
@@ -73,6 +77,7 @@ class ProductApiview(APIView):
             high_price=Decimal(request.GET.get("high_price",0.00))
             low_price=Decimal(request.GET.get("low_price",0.00))
             search=request.GET.get("search",None)
+            product_category=request.GET.get("product_category",None)
             queryset=Product.objects.select_related(
                 # "created_by"
             ).prefetch_related(
@@ -98,6 +103,9 @@ class ProductApiview(APIView):
 
             if low_price != 0.00:
                 queryset=queryset.filter(price__gte=low_price)
+
+            if product_category:
+                queryset=queryset.filter(productCategory=product_category)
 
             paginated=queryset[(page * limit) : (page * limit) + limit]
             total_items=queryset.count()
@@ -526,7 +534,7 @@ class ProductBookedDateApiview(APIView):
             month = request.GET.get('month',now().date().month)
             year = request.GET.get('year',now().date().year)
             booked_date=Bookings.objects.filter(Q(checkInDate__month=month, checkInDate__year=year) |
-                Q(checkOutDate__month=month, checkOutDate__year=year),product__id=property_id,).only("checkInDate","checkOutDate",)
+                Q(checkOutDate__month=month, checkOutDate__year=year),product__id=property_id,bookingStatus="paid").only("checkInDate","checkOutDate",)
             return app_response(
                 success=True,
                 data=self.BookedDateSerializer(booked_date,many=True).data,
