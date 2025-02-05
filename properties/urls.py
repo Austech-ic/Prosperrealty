@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import *
 
+
 urlpatterns = [
    path("product/booking/",ProductBookingApiView.as_view()),
    path("product/",ProductApiview.as_view(),name="home_product"),

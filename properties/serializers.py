@@ -33,7 +33,7 @@ class BookingWriteSerializer(serializers.ModelSerializer):
         if checkOutDate == checkInDate:
             raise RuntimeError("checkin and check out date must not be equal")
         
-        if self.Meta.model.objects.filter(checkInDate__lte=checkOutDate,checkOutDate__gte=checkInDate,product=attrs["product"]).exists():
+        if self.Meta.model.objects.filter(checkInDate__lte=checkOutDate,checkOutDate__gte=checkInDate,product=attrs["product"],bookingStatus="paid").exists():
             raise RuntimeError("Product Already Booked between {} and {}".format(checkInDate,checkOutDate))
         
         return super().validate(attrs)
@@ -77,7 +77,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class AppointmentWriteSerializer(serializers.ModelSerializer):
-    userDetail=UserSerializer()
+    userDetail=UserSerializer(read_only=True)
     propertyName=serializers.SerializerMethodField(read_only=True)
     class Meta:
         model=Appointment
