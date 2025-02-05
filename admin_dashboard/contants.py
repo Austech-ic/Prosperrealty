@@ -40,7 +40,10 @@ PRODUCT_CATEGORY=[
 PRODUCT_TYPE=[
     "Apartment",
     "Villa",
-    "Duplex"
+    "Duplex",
+    "Office",
+    "Town House",
+    "Single Family"
 ]
 
 TAG=[

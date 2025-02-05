@@ -14,5 +14,5 @@ class AdminDashboardConfig(AppConfig):
         # loadProductTag()
         # createCountry()
         # loadProductStatus()
-        # loadProductType()
-        loadblogType()
+        loadProductType()
+        # loadblogType()
