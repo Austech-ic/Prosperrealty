@@ -78,7 +78,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
 class AppointmentWriteSerializer(serializers.ModelSerializer):
     userDetail=UserSerializer(read_only=True)
-    propertyName=serializers.SerializerMethodField(read_only=True)
+    # propertyName=serializers.SerializerMethodField(read_only=True)
     class Meta:
         model=Appointment
         exclude=[
