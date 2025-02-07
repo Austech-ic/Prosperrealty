@@ -69,10 +69,12 @@ class MessageWriteSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    createdBy=UserSerializer(read_only=True)
     class Meta:
         model=Comment
         exclude=[
-            "blog"
+            "blog",
+            "createdBy"
         ]
 
 

@@ -176,6 +176,8 @@ class BlogAPiView(APIView):
             ) 
 
 class SingleBlogApiview(APIView):
+    permission_classes=[IsAuthenticatedOrReadOnly]
+
     def get(self,request,blog_id):
         try:
             instance=Blog.objects.select_related(
@@ -196,6 +198,7 @@ class SingleBlogApiview(APIView):
             ) 
         
 class SingleProductApiView(APIView):
+    permission_classes=[IsAuthenticatedOrReadOnly]
     def get(self,request,product_id):
         try:
             queryset=Product.objects.select_related(
@@ -218,6 +221,8 @@ class SingleProductApiView(APIView):
             ) 
         
 class ProductBookingApiView(APIView):
+    
+
     @swagger_auto_schema(
             request_body=BookingWriteSerializer
     )
@@ -303,9 +308,8 @@ class MessageWriteApiView(APIView):
             )    
         
 class CommentApiView(APIView):
-    permission_classes=[
+    permission_classes=[IsAuthenticatedOrReadOnly]
 
-    ]
     @swagger_auto_schema(
             request_body=CommentSerializer
     )
@@ -314,7 +318,7 @@ class CommentApiView(APIView):
             blog=Blog.objects.get(id=blog_id)
             serializer=CommentSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
-            serializer.save(blog=blog)
+            serializer.save(blog=blog,created_by=request.user)
             return app_response(
                 success=True,
                 data=serializer.data,
