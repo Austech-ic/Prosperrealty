@@ -40,6 +40,8 @@ class BookingWriteSerializer(serializers.ModelSerializer):
 
 
 class BookingReadSerializer(serializers.ModelSerializer):
+    fullName=serializers.SerializerMethodField()
+    email=serializers.SerializerMethodField()
     class Meta:
         model=Bookings
         fields=[
@@ -52,6 +54,12 @@ class BookingReadSerializer(serializers.ModelSerializer):
             "stayDuration",
             "bookingStatus"
         ]
+
+    def get_fullName(self,obj):
+        return obj.initiated_by.username
+    
+    def get_email(self,obj):
+        return obj.initiated_by.email
 
 
 class SingleBookingReadSerializer(serializers.ModelSerializer):
