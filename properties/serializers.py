@@ -66,7 +66,7 @@ class SingleBookingReadSerializer(serializers.ModelSerializer):
     initiated_by=UserSerializer()
     class Meta:
         model=Bookings
-        exclude="__all__"
+        fields="__all__"
         depth=1
 
 
