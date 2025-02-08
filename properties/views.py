@@ -84,13 +84,13 @@ class ProductApiview(APIView):
                 "images","tag"
             ).order_by("-createdAt")
             if state:
-                queryset=queryset.filter()
+                queryset=queryset.filter(state__name=state)
 
             if search:
                 queryset=queryset.filter(name__icontains=search)
 
             if city:
-                queryset=queryset.filter()
+                queryset=queryset.filter(city__LGA=city)
 
             if property_type:
                 queryset=queryset.filter(productType__name=property_type)
@@ -318,7 +318,7 @@ class CommentApiView(APIView):
             blog=Blog.objects.get(id=blog_id)
             serializer=CommentSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
-            serializer.save(blog=blog,created_by=request.user)
+            serializer.save(blog=blog,createdBy=request.user)
             return app_response(
                 success=True,
                 data=serializer.data,

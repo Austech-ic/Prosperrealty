@@ -74,7 +74,6 @@ class CommentSerializer(serializers.ModelSerializer):
         model=Comment
         exclude=[
             "blog",
-            "createdBy"
         ]
 
 
