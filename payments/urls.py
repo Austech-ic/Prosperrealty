@@ -7,5 +7,5 @@ from .views import (
 from .webhook import PaystackWebhookView
 urlpatterns =[
     url("payment/<str:invoiceId>/",MakePaymentApiView.as_view()),
-    url("payment/webhook/",PaystackWebhookView.as_view()),
+    url("payment/paystack/webhook/",PaystackWebhookView.as_view()),
 ]

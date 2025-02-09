@@ -19,9 +19,10 @@ class MakePaymentApiView(APIView):
     def post(self,request,invoiceId):
         try:
             with transaction.atomic():
+             
                 #Get the invoice from service Invoice
                 invoice=TransactionInvoice.objects.select_related(
-                    "product"
+                    "booking","user"
                 ).get(invoiceId=invoiceId)
 
                 if invoice.amountOutstanding == Decimal(0.00):
@@ -54,7 +55,8 @@ class MakePaymentApiView(APIView):
                     else "",
                     amount=invoice.amountOutstanding ,
                     gateway="paystack",
-                    channel="bank_transfer"
+                    channel="bank_transfer",
+                    booking=invoice.booking
                 )
 
                 return app_response(

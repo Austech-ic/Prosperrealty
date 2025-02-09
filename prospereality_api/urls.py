@@ -35,6 +35,7 @@ urlpatterns = [
     path("api/v1/",include("account.urls")),
     path("api/v1/",include("admin_dashboard.urls")),
     path("api/v1/",include("properties.urls")),
+    path("api/v1/",include("payments.urls")),
 
     path('swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),

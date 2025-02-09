@@ -14,13 +14,19 @@ def handle_single_invoice_payment(transaction:TransactionRecord, data):
         transaction.channel = data["channel"]
         transaction.payed_on = data["paid_at"]
 
+
         # transaction.invoice.status=paymentChecker(amount_paid,transaction.invoice)
         transaction.invoice.amountOutstanding -= amount_paid
-        transaction.invoice.amountPaid +=amount_paid
+        transaction.invoice.amountPaid =amount_paid
 
         transaction.invoice.payedOn = data["paid_at"]
+        transaction.invoice.status= data["status"]
+        transaction.booking.bookingStatus=data["status"]
         transaction.invoice.save()
+        transaction.booking.save()
         transaction.save()
+
+        #send Email for confimation
     except Exception as e:
         print("@handle_single_invoice_payment() --> ", e)
         return None
@@ -37,6 +43,8 @@ def handle_single_failed_payment(transaction:TransactionRecord, data):
         transaction.status = data["status"]
         transaction.channel = data["channel"]
         transaction.payed_on = data["paid_at"]
+        transaction.booking.bookingStatus=data["status"]
+        transaction.booking.save()
         transaction.save()
     except Exception as e:
         print("@handle_single_invoice_payment() --> ", e)

@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.db import models
 from admin_dashboard.models import Product
 from properties.models import Bookings
@@ -22,7 +23,7 @@ class BaseModel(models.Model):
 
 
 class TransactionInvoice(BaseModel):
-    invoiceId=models.CharField(max_length=10,null=False,blank=False)
+    invoiceId=models.CharField(max_length=10,null=True,blank=True)
     booking=models.ForeignKey(Bookings,on_delete=models.CASCADE,null=True,blank=True)
     payedOn = models.DateTimeField(blank=True, null=True)
     amountPaid = models.DecimalField(
@@ -73,7 +74,7 @@ class TransactionRecord(BaseModel):
         decimal_places=2,
         null=False,
         blank=False,
-        validators=[MinValueValidator(1.0)],
+        validators=[MinValueValidator(Decimal("1.00"))],
     )
     external_reference = models.TextField(blank=True, default="")
     authorization_url = models.TextField(blank=True, default="")

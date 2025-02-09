@@ -10,7 +10,7 @@ def generate_comfirmation_no(length=10):
                 )
                 for i in range(length)
             )
-            Bookings.objects.get(confirmationNumber=invoice_id)
+            Bookings.objects.get(confirmationNumber__iexact=invoice_id)
 
         except Bookings.DoesNotExist:
-            return invoice_id
+            return invoice_id.upper()

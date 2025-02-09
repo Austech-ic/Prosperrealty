@@ -35,7 +35,8 @@ DEBUG = True if config("DEBUG") == "True" else False
 
 ALLOWED_HOSTS = [
     "localhost",
-    "prosperrealty.onrender.com"
+    "prosperrealty.onrender.com",
+    "fd6f-197-211-59-147.ngrok-free.app"
 ]
 
 
