@@ -52,7 +52,8 @@ class BookingReadSerializer(serializers.ModelSerializer):
             "checkInDate",
             "checkOutDate",
             "stayDuration",
-            "bookingStatus"
+            "bookingStatus",
+            "confirmationNumber"
         ]
 
     def get_fullName(self,obj):
