@@ -5,6 +5,9 @@ from utils.app_response import app_response
 from utils.error_handler import error_handler
 from .serializers import *
 from .models import *
+from payments.models import TransactionInvoice
+from payments.helper import generate_invoice_id
+from .helper  import generate_comfirmation_no
 from admin_dashboard.serializers import (
     ProductReadSerializer,
     ProductSingleReadSerializer,
@@ -222,21 +225,33 @@ class SingleProductApiView(APIView):
         
 class ProductBookingApiView(APIView):
     
-
     @swagger_auto_schema(
             request_body=BookingWriteSerializer
     )
     def post(self,request):
         try:
-            serializer=BookingWriteSerializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            serializer.save(initiated_by=request.user)
-            return app_response(
-                success=True,
-                data=serializer.data,
-                message="Booking Successfull",
-                http_status=status.HTTP_200_OK
-            )      
+            with transaction.atomic():
+                serializer=BookingWriteSerializer(data=request.data)
+                serializer.is_valid(raise_exception=True)
+                booking=serializer.save(initiated_by=request.user,
+                                        confirmationNumber=generate_comfirmation_no())
+                #load transaction Invoice
+                amount=Decimal(booking.stayDuration) * Decimal(booking.product.price)
+                invoice=TransactionInvoice.objects.create(
+                    user=request.user,
+                    booking=booking,
+                    totalAmount= amount,
+                    amountOutstanding= amount,
+                    invoiceId=generate_invoice_id()
+                )
+                resp=serializer.data
+                resp["invoiceId"]=invoice.invoiceId
+                return app_response(
+                    success=True,
+                    data=resp,
+                    message="Booking Successfull",
+                    http_status=status.HTTP_200_OK
+                )      
         except Exception as e:
             return app_response(
                 success=False,

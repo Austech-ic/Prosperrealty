@@ -3,7 +3,9 @@ BOOKING_STATUS=[
     ("rejected","rejected"),
     ("completed","completed"),
     ("processing","processing"),
-    ("paid","paid")
+    ("paid","paid"),
+    ("failed", "failed"),
+    ("reversed", "reversed"),
 ]
 
 CONTACT_METHOD=[

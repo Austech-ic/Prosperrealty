@@ -58,7 +58,8 @@ INSTALLED_APPS = [
 
     "account",
     "admin_dashboard",
-    "properties"
+    "properties",
+    "payments"
 ]
 
 MIDDLEWARE = [
@@ -274,5 +275,5 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
 
-
-
+PAYSTACK_SECRET_KEY = config("PAYSTACK_SECRET_KEY")
+PAYSTACK_PUBLIC_KEY = config("PAYSTACK_PUBLIC_KEY")
