@@ -2,7 +2,7 @@ from .models import *
 from rest_framework import serializers
 from drf_extra_fields.fields import Base64ImageField,Base64FileField,HybridImageField
 from account.serializers import UserSerializer
-
+from .helpers import format_number
 class Base64ImagesField(HybridImageField):
     class Meta:
         swagger_schema_fields = {
@@ -208,7 +208,7 @@ class SingleBlogReadSerializer(serializers.ModelSerializer):
 
 
     def get_viewsCount(self,obj):
-        return obj.views.first().count if obj.views.first() else 0
+        return format_number(obj.views.first().count) if obj.views.first() else 0
     
 class DashbordBlogReadSerializer(serializers.ModelSerializer):
     viewsCount=serializers.SerializerMethodField()
