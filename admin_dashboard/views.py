@@ -532,7 +532,9 @@ class BookingsApiview(APIView):
             page=int(request.GET.get("page",0))
             limit=int(request.GET.get("limit",10))
             search=request.GET.get("search",None)
-            queryset=Bookings.objects.order_by("-createdAt")
+            queryset=Bookings.objects.filter(
+                bookingStatus="success"
+            ).order_by("-createdAt")
             if search:
                 queryset=queryset.filter(confirmationNumber=search)
             paginated=queryset[(page * limit) : (page * limit) + limit]
