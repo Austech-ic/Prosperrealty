@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import *
 from account.serializers import UserSerializer
 from django.utils.timezone import now
+from admin_dashboard.serializers import ProductReadSerializer
 
 class BookingWriteSerializer(serializers.ModelSerializer):
     class Meta:
@@ -65,6 +66,7 @@ class BookingReadSerializer(serializers.ModelSerializer):
 
 class SingleBookingReadSerializer(serializers.ModelSerializer):
     initiated_by=UserSerializer()
+    product=ProductReadSerializer()
     class Meta:
         model=Bookings
         fields="__all__"
@@ -112,6 +114,7 @@ class AppointmentWriteSerializer(serializers.ModelSerializer):
 class SingleAppointmentReadSerializer(serializers.ModelSerializer):
     agentDetail=UserSerializer()
     userDetail=UserSerializer()
+    property=ProductReadSerializer()
     class Meta:
         model=Appointment
         fields="__all__"

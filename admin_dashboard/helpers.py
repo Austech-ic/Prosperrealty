@@ -104,3 +104,15 @@ def get_analytics(year) -> list:
     ]
 
     return result
+
+def format_number(number):
+
+    if number >= 1000000:
+        return '{:.1f}M'.format(number / 1000000)
+    elif number >= 1000:
+        if number % 1000 == 0:
+            return '{}k'.format(int(number / 1000))
+        else:
+            return '{:.1f}k'.format(number / 1000)
+    else:
+        return str(number)
