@@ -6,6 +6,7 @@ BOOKING_STATUS=[
     ("paid","paid"),
     ("failed", "failed"),
     ("reversed", "reversed"),
+    ("success","success")
 ]
 
 CONTACT_METHOD=[
