@@ -53,6 +53,7 @@ class AccountCreationSerializer(serializers.ModelSerializer):
             return attrs
         
     def create(self, validated_data):
+        validated_data["email"]=validated_data["email"].lower()
         user=get_user_model().objects.create(**validated_data)
         user.set_password(validated_data['password'])
         user.confirm_password=user.password
@@ -123,6 +124,10 @@ class TokenObtainPairSerializer(JwtTokenObtainPairSerializer):
 
     username_field = get_user_model().USERNAME_FIELD
     email = serializers.EmailField(required=False)
+
+    def to_internal_value(self, data):
+        data["email"]=data["email"].lower()
+        return data
 
     def validate(self, attrs):
         data = super().validate(attrs)
