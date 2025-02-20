@@ -368,7 +368,7 @@ class CommentApiView(APIView):
             page=int(request.GET.get("page",0))
             limit=int(request.GET.get("limit",10))
             blog=Blog.objects.get(id=blog_id)
-            queryset=Comment.objects.filter(blog=blog).order_by("-created_at")
+            queryset=Comment.objects.filter(blog=blog).order_by("-createdAt")
             paginated=queryset[(page * limit) : (page * limit) + limit]
             total_items=queryset.count()
             meta_data={
