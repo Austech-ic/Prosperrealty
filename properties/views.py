@@ -561,7 +561,7 @@ class ProductBookedDateApiview(APIView):
             month = request.GET.get('month',now().date().month)
             year = request.GET.get('year',now().date().year)
             booked_date=Bookings.objects.filter(Q(checkInDate__month=month, checkInDate__year=year) |
-                Q(checkOutDate__month=month, checkOutDate__year=year),product__id=property_id,bookingStatus="success").only("checkInDate","checkOutDate",)
+                Q(checkOutDate__month=month, checkOutDate__year=year),product__id=property_id).filter(bookingStatus="success").only("checkInDate","checkOutDate",)
             return app_response(
                 success=True,
                 data=self.BookedDateSerializer(booked_date,many=True).data,
