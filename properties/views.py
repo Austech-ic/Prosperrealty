@@ -62,7 +62,10 @@ class ProductApiview(APIView):
                 Parameter("low_price", IN_QUERY, type="str", required=False),
                 Parameter("search", IN_QUERY, type="str", required=False),
                 Parameter("property_status", IN_QUERY, type="str", required=False),
-                Parameter("currency_type", IN_QUERY, type="str", required=False),
+                Parameter("currency_type", IN_QUERY, type="str", required=False,enum=[
+                    "NG",
+                    "USD"
+                ]),
                 Parameter("product_category",IN_QUERY, type="str", required=False,enum=[
                     "for sales",
                     "shortlet"
