@@ -545,7 +545,8 @@ class ProductBookedDateApiview(APIView):
             model=Bookings
             fields=[
                 "checkInDate",
-                "checkOutDate"
+                "checkOutDate",
+                "bookingStatus"
             ]
     permission_classes=[
 
