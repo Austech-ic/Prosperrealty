@@ -62,6 +62,7 @@ class ProductApiview(APIView):
                 Parameter("low_price", IN_QUERY, type="str", required=False),
                 Parameter("search", IN_QUERY, type="str", required=False),
                 Parameter("property_status", IN_QUERY, type="str", required=False),
+                Parameter("currency_type", IN_QUERY, type="str", required=False),
                 Parameter("product_category",IN_QUERY, type="str", required=False,enum=[
                     "for sales",
                     "shortlet"
@@ -75,6 +76,7 @@ class ProductApiview(APIView):
             limit=int(request.GET.get("limit",10))
             state=request.GET.get("state",None)
             city=request.GET.get("city",None)
+            currency_type=request.GET.get("currency_type",None)
             property_type=request.GET.get("property_type",None)
             property_status=request.GET.get("property_status",None)
             high_price=Decimal(request.GET.get("high_price",0.00))
@@ -109,6 +111,9 @@ class ProductApiview(APIView):
 
             if product_category:
                 queryset=queryset.filter(productCategory=product_category)
+
+            if currency_type:
+                queryset=queryset.filter(currency=currency_type)
 
             paginated=queryset[(page * limit) : (page * limit) + limit]
             total_items=queryset.count()
