@@ -79,13 +79,13 @@ class MessageWriteSerializer(serializers.ModelSerializer):
         fields="__all__"
 
 
-class CommentSerializer(serializers.ModelSerializer):
-    createdBy=UserSerializer(read_only=True)
-    class Meta:
-        model=Comment
-        exclude=[
-            "blog",
-        ]
+# class CommentSerializer(serializers.ModelSerializer):
+#     createdBy=UserSerializer(read_only=True)
+#     class Meta:
+#         model=Comment
+#         exclude=[
+#             "blog",
+#         ]
 
 
 class AppointmentWriteSerializer(serializers.ModelSerializer):

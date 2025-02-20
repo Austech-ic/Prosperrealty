@@ -3,6 +3,9 @@ from rest_framework import serializers
 from drf_extra_fields.fields import Base64ImageField,Base64FileField,HybridImageField
 from account.serializers import UserSerializer
 from .helpers import format_number
+# 
+from properties.models import Comment
+
 class Base64ImagesField(HybridImageField):
     class Meta:
         swagger_schema_fields = {
@@ -190,16 +193,25 @@ class BlogReadSerializer(serializers.ModelSerializer):
             "description"
         ]
 
+class CommentSerializer(serializers.ModelSerializer):
+    createdBy=UserSerializer(read_only=True)
+    class Meta:
+        model=Comment
+        exclude=[
+            "blog",
+        ]
+
 class SingleBlogReadSerializer(serializers.ModelSerializer):
     images=ImagesSerializer(many=True,required=False)
     tag=BlogTagSerializer(many=True)
     created_by=UserSerializer()
     viewsCount=serializers.SerializerMethodField()
     otherBlog=serializers.SerializerMethodField()
+    comments=serializers.SerializerMethodField()
+    has_more=serializers.SerializerMethodField()
     class Meta:
         model=Blog
         fields="__all__"
-
 
 
     def get_otherBlog(self,obj):
@@ -209,6 +221,16 @@ class SingleBlogReadSerializer(serializers.ModelSerializer):
 
     def get_viewsCount(self,obj):
         return format_number(obj.views.first().count) if obj.views.first() else 0
+    
+    def get_comments(self,obj):
+        comments=obj.comments.order_by("-createdAt")[:3]
+        return CommentSerializer(comments,many=True).data
+
+    def get_has_more(self,obj):
+        if obj.comments.count() > 3:
+            return True
+        else :
+            return False
     
 class DashbordBlogReadSerializer(serializers.ModelSerializer):
     viewsCount=serializers.SerializerMethodField()

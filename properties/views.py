@@ -4,6 +4,7 @@ from decimal import Decimal
 from utils.app_response import app_response
 from utils.error_handler import error_handler
 from .serializers import *
+from admin_dashboard.serializers import CommentSerializer
 from .models import *
 from payments.models import TransactionInvoice
 from payments.helper import generate_invoice_id
@@ -193,7 +194,7 @@ class SingleBlogApiview(APIView):
         try:
             instance=Blog.objects.select_related(
                 "created_by"
-            ).prefetch_related("images").get(id=blog_id)
+            ).prefetch_related("images","tag","comments").get(id=blog_id)
             return app_response(
                 success=True,
                 data=SingleBlogReadSerializer(instance).data,
