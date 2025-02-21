@@ -379,9 +379,70 @@ class CommentApiView(APIView):
             }
             return app_response(
                 success=True,
-                data=CommentSerializer(paginated,many=True).data,
+                data=CommentSerializer(paginated,many=True,context={"request":request}).data,
                 message="Comment fetched",
                 meta_data=meta_data,
+                http_status=status.HTTP_200_OK
+            )      
+        except Exception as e:
+            return app_response(
+                success=False,
+                data=None,
+                message=error_handler(e),
+                http_status=status.HTTP_400_BAD_REQUEST
+            )    
+
+
+class SingleCommentApiView(APIView):
+    permission_classes=[IsAuthenticatedOrReadOnly]
+
+    @swagger_auto_schema(
+            request_body=CommentSerializer
+    )
+    def put(self,request,blog_id,comment_id):
+        try:
+            blog=Blog.objects.get(id=blog_id)
+            instance=Comment.objects.get(blog=blog,id=comment_id)
+            if instance.createdBy != request.user:
+                return app_response(
+                    success=False,
+                    data=None,
+                    message="Insufficient Permission",
+                    http_status=status.HTTP_403_FORBIDDEN
+                )   
+            serializer=CommentSerializer(instance=instance,data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save(blog=blog,createdBy=request.user)
+            return app_response(
+                success=True,
+                data=serializer.data,
+                message="Comment updated",
+                http_status=status.HTTP_200_OK
+            )      
+        except Exception as e:
+            return app_response(
+                success=False,
+                data=None,
+                message=error_handler(e),
+                http_status=status.HTTP_400_BAD_REQUEST
+            )    
+        
+    def delete(self,request,blog_id,comment_id):
+        try:
+            blog=Blog.objects.get(id=blog_id)
+            instance=Comment.objects.get(blog=blog,id=comment_id)
+            if instance.createdBy != request.user:
+                return app_response(
+                    success=False,
+                    data=None,
+                    message="Insufficient Permission",
+                    http_status=status.HTTP_403_FORBIDDEN
+                )   
+            instance.delete()
+            return app_response(
+                success=True,
+                data=None,
+                message="Comment deleted",
                 http_status=status.HTTP_200_OK
             )      
         except Exception as e:

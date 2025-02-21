@@ -10,6 +10,7 @@ urlpatterns = [
    path("blog/<uuid:blog_id>/",SingleBlogApiview.as_view(),name="SingleBlogApiview"),
    path("message/",MessageWriteApiView.as_view()),
    path("blog/<uuid:blog_id>/comment/",CommentApiView.as_view()),
+   path("blog/<uuid:blog_id>/comment/<uuid:comment_id>/",SingleCommentApiView.as_view()),
    path("state/",StateApiView.as_view()),
    path("country/",CountrypiView.as_view()),
    path("state/local-govt/<str:state_name>/",LocalGovernmentApiView.as_view()),

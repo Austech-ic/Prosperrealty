@@ -195,11 +195,20 @@ class BlogReadSerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     createdBy=UserSerializer(read_only=True)
+    can_delete=serializers.SerializerMethodField()
     class Meta:
         model=Comment
         exclude=[
             "blog",
         ]
+
+
+    def get_can_delete(self,obj):
+        req=self.context.get("request",None)
+        if req:
+            if obj.createdBy == req.user:
+                return True
+            return False
 
 class SingleBlogReadSerializer(serializers.ModelSerializer):
     images=ImagesSerializer(many=True,required=False)
