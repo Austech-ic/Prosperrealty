@@ -19,5 +19,6 @@ urlpatterns = [
    path("appointments/",AppointmentApiView.as_view()),
    path("product/<uuid:property_id>/booked/date/",ProductBookedDateApiview.as_view()),
    path("my_appointment/",MyAppointmentAPiView.as_view()),
-   path("my_bookings/",MyBookingsAPiView.as_view())
+   path("my_bookings/",MyBookingsAPiView.as_view()),
+   path('product/price-range/', ProductPriceRangeView.as_view(), name='product-price-range')
 ]

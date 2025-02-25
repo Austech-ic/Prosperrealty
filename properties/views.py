@@ -41,6 +41,8 @@ from rest_framework.permissions import (
 from drf_yasg.utils import swagger_auto_schema
 from django.db import transaction
 from django.db.models import Q
+from django.db.models import Min, Max
+
 
 class ProductApiview(APIView):
     parser_classes=[
@@ -673,6 +675,31 @@ class MyAppointmentAPiView(APIView):
                 message="Booked Date Fetched SUCCESSFUL",
                 http_status=status.HTTP_200_OK
             ) 
+        except Exception as e:
+            return app_response(
+                success=False,
+                data=None,
+                message=error_handler(e),
+                http_status=status.HTTP_400_BAD_REQUEST
+            )
+
+class ProductPriceRangeView(APIView):
+
+    def get(self, request):
+        try:
+            # Aggregate to get the minimum and maximum prices
+            price_range = Product.objects.aggregate(
+                min_price=Min('price'),
+                max_price=Max('price')
+            )
+
+            # Return the price range
+            return app_response(
+                success=True,
+                data= price_range,
+                message= "Price range fetched successfully.",
+                http_status=status.HTTP_200_OK)
+
         except Exception as e:
             return app_response(
                 success=False,
