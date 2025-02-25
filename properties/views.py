@@ -684,6 +684,7 @@ class MyAppointmentAPiView(APIView):
             )
 
 class ProductPriceRangeView(APIView):
+    permission_classes=[]
 
     def get(self, request):
         try:

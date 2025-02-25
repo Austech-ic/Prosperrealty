@@ -2,7 +2,9 @@
 # **/migrations/
 env/
 db.sqlite3
+temp_auto_push.bat
 .env
 .DS_Store
 membscribe-venv
-activate.bat
+activate.bat.gitignore
+branch_structure.json
