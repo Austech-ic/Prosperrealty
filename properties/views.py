@@ -638,3 +638,45 @@ class ProductBookedDateApiview(APIView):
                 message=error_handler(e),
                 http_status=status.HTTP_400_BAD_REQUEST
             )  
+
+
+class MyBookingsAPiView(APIView):
+    def get(self,request):
+        try:
+            booked=Bookings.objects.select_related(
+                "initiated_by","product"
+            ).filter(initiated_by=request.user).order_by("-createdAt")
+            return app_response(
+                success=True,
+                data=BookingReadSerializer(booked,many=True).data,
+                message="Booked Date Fetched SUCCESSFUL",
+                http_status=status.HTTP_200_OK
+            ) 
+        except Exception as e:
+            return app_response(
+                success=False,
+                data=None,
+                message=error_handler(e),
+                http_status=status.HTTP_400_BAD_REQUEST
+            ) 
+        
+
+class MyAppointmentAPiView(APIView):
+    def get(self,request):
+        try:
+            booked=Appointment.objects.select_related(
+                "agentDetail","userDetail","property"
+            ).filter(userDetail=request.user).order_by("-createdAt")
+            return app_response(
+                success=True,
+                data=AppointmentWriteSerializer(booked,many=True).data,
+                message="Booked Date Fetched SUCCESSFUL",
+                http_status=status.HTTP_200_OK
+            ) 
+        except Exception as e:
+            return app_response(
+                success=False,
+                data=None,
+                message=error_handler(e),
+                http_status=status.HTTP_400_BAD_REQUEST
+            )
